@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const bcrypt = require("bcrypt");
-const db = require("../db"); // Ajuste o caminho para o arquivo de conexão ao banco de dados
+const db = require("../../db"); // Ajuste o caminho para o arquivo de conexão ao banco de dados
 const router = express.Router();
 
 const verifyToken = (req, res, next) => {

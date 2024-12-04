@@ -11,7 +11,7 @@ const app = express();
 // Configuração do CORS
 app.use(
   cors({
-    origin: "https://marcosnovais.com", // Frontend local
+    origin: "https://marcosnovais.com", // Frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     preflightContinue: true,
