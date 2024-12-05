@@ -78,9 +78,9 @@ app.post("/login", async (req, res) => {
 
 // Rota de registro
 app.post("/register", async (req, res) => {
-  const { usuario, senha, papel } = req.body;
+  const { usuario, senha, role } = req.body; // Alterado de papel para role
 
-  if (!usuario || !senha || !papel) {
+  if (!usuario || !senha || !role) { // Alterado de papel para role
     return res.status(400).json({ error: "Todos os campos são obrigatórios." });
   }
 
@@ -108,7 +108,7 @@ app.post("/register", async (req, res) => {
     // Insere o novo usuário no banco de dados com a senha codificada
     await pool.query(
       "INSERT INTO users (usuario, senha, role) VALUES (?, ?, ?)",
-      [usuario, hashedPassword, papel]
+      [usuario, hashedPassword, role] // Alterado de papel para role
     );
 
     console.log("Usuário registrado com sucesso");
@@ -121,6 +121,7 @@ app.post("/register", async (req, res) => {
       .json({ error: `Erro ao registrar usuário: ${err.message}` });
   }
 });
+
 
 const path = require("path");
 
