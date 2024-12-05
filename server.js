@@ -21,7 +21,6 @@ app.use(
 // Função verifyRole definida antes de usá-la
 const verifyRole = (role) => {
   return (req, res, next) => {
-    // Decodificar o token
     const decoded = jwt.verify(req.token, "seu_segredo");
     if (decoded.role !== role) {
       return res
@@ -38,7 +37,7 @@ app.get("/api/admin", verifyToken, verifyRole("admin"), (req, res) => {
 });
 
 // Configuração do body-parser
-app.use(bodyParser.json()); // Para processar o corpo das requisições em JSON
+app.use(bodyParser.json());
 
 // Rota de login
 app.post("/login", async (req, res) => {
@@ -48,10 +47,11 @@ app.post("/login", async (req, res) => {
     console.log("Recebido no backend:", { usuario, senha });
 
     // Verifica se o usuário existe
-    const result = await pool
-      .promise()
-      .query("SELECT * FROM users WHERE usuario = ?", [usuario]);
-    const user = result[0][0];
+    const [result] = await pool.query(
+      "SELECT * FROM users WHERE usuario = ?",
+      [usuario]
+    );
+    const user = result[0];
 
     if (!user) {
       console.log("Usuário não encontrado:", usuario);
@@ -88,13 +88,12 @@ app.post("/register", async (req, res) => {
     console.log("Verificando se o usuário já existe...");
 
     // Verifica se o usuário já existe no banco de dados
-    const userExists = await pool
-      .promise()
-      .query("SELECT * FROM users WHERE usuario = ?", [usuario]);
+    const [userExists] = await pool.query(
+      "SELECT * FROM users WHERE usuario = ?",
+      [usuario]
+    );
 
-    console.log("Resultado da consulta userExists:", userExists[0].length);
-
-    if (userExists[0].length > 0) {
+    if (userExists.length > 0) {
       return res.status(409).json({ error: "Usuário já existe." });
     }
 
@@ -107,15 +106,12 @@ app.post("/register", async (req, res) => {
     console.log("Inserindo o novo usuário no banco de dados...");
 
     // Insere o novo usuário no banco de dados com a senha codificada
-    const result = await pool
-      .promise()
-      .query("INSERT INTO users (usuario, senha, role) VALUES (?, ?, ?)", [
-        usuario,
-        hashedPassword,
-        papel,
-      ]);
+    await pool.query(
+      "INSERT INTO users (usuario, senha, role) VALUES (?, ?, ?)",
+      [usuario, hashedPassword, papel]
+    );
 
-    console.log("Usuário registrado com sucesso:", result);
+    console.log("Usuário registrado com sucesso");
 
     res.status(201).json({ message: "Usuário registrado com sucesso!" });
   } catch (err) {
