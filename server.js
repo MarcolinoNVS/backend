@@ -4,7 +4,7 @@ const pool = require("./db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { verifyToken } = require("./src/middlewares/auth");
+const { verifyToken } = require("./middlewares/auth");
 
 const app = express();
 
